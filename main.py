@@ -25,11 +25,10 @@ def excel(filename):
     df = pd.read_excel(filename, engine='openpyxl')
     df = df.replace(np.nan,'',regex=True)
 
-    #html(df.head())
     text_name = ""
     text_src = ""
     text_dst = ""
-    p = re.compile("[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") #ip 정규표현식
+    p = re.compile("[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") #ip 정규표현식 적용
 
     for i in df.index:
         if df['탐지유형'][i] != "":                                  #탐지유형 열이 공백이 아니면 로직 태움
