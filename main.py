@@ -38,7 +38,7 @@ def excel(filename):
             if text_name != "":                                      #엔터로 탐지유형을 구분하지만 그냥 추가하면 처음에 공백이 들어가므로 변수에 값이 없는 첫 루프면 안넣게 조건 추가
                 text_name = text_name + "\n"
             if text_name.endswith(df['탐지유형'][i]):                   #중복값을 추가하지 않기 위해 체크 로직
-                print('error')
+                print('중복_name')
             else:
                 text_name = text_name + df['탐지유형'][i] + "(" + df['탐지 이벤트'][i] + "건)" #문자열에 탐지유형 추가
 
@@ -48,8 +48,8 @@ def excel(filename):
                 """if text_src != (df['공격대상'][i] + "(" + df.iat[i,5] + "), "): #중복제거 로직 아직 미완
                     text_src = text_src + df['공격대상'][i] + "(" + df.iat[i,5] + "), " """
                 dup_src = text_src.split('(')
-                if dup_src[len(dup_src)-2].endswith(df['공격대상'][i]):      #중복제거 로직 미완성
-                    print('error')
+                if dup_src[len(dup_src)-2].endswith(df['공격대상'][i]) and not text_src.endswith("\n"):      #중복제거 로직 미완성
+                    print('중복_src')
                 else:
                     text_src = text_src + df['공격대상'][i] + "(" + df.iat[i, 5] + "), "
             else:
@@ -59,15 +59,14 @@ def excel(filename):
         #목적지 로직
         if p.match(df.iat[i,7]):
             dup_dst = text_dst.split('(')
-            if dup_dst[len(dup_dst)-2].endswith(df.iat[i,7]):
-                print("error")
+            if dup_dst[len(dup_dst)-2].endswith(df.iat[i,7]) and not text_dst.endswith("\n"):#마지막ip가 중복되면 추가안함,공격유형바뀌면 검사 예외
+                print("중복_dst")
             else:
                 text_dst = text_dst + df.iat[i,7] + "(tcp/" + df.iat[i,8] + "), "   #ip형식이면 추가
         else:
             if df.iat[i,7] == "" and text_dst != "":                            #목적지 문자열이 공백이 아니며 목적지 나열이 끝나면 공백추가
                 text_dst = text_dst[:-2]                                        #마지막 ip는 ", "을 삭제
                 text_dst = text_dst + "\n"
-
         #탐지시간 로직
         if r.match(df.iat[i,11]):
             text_date = text_date + df.iat[i,11][11:-2] + " | "
@@ -77,7 +76,7 @@ def excel(filename):
                 text_date = text_date + "\n"
 
     text_src = text_src[:-2]
-    text_dst = text_dst[:-2]        #출발지 목적지 마직막에 ", " 제거 탐지유형은 하나씩만 있으므로 없어도 됨
+    text_dst = text_dst[:-1]        #출발지 목적지 마직막에 ", " 제거 탐지유형은 하나씩만 있으므로 없어도 됨
     text_date = text_date[:-3]
 
     list1 = text_name.split("\n")
@@ -88,9 +87,9 @@ def excel(filename):
     excel_report = ""
     report_date = df.iat[4,11][:11]
     report_date = report_date.replace("-","/")
-    for j in range(0,len(list1)):
+    for j in range(0, len(list1)):
         list4[j] = report_date + list4[j]#str(datetime.today().strftime("%Y/%m/%d")) + " " + list4[j]
-        excel_report = excel_report + "<h1>" +list1[j] + "</h1><h2>" + list2[j] + "</h2><h2>" + list3[j] + "</h2><h2>" + list4[j] + "</h2>"
+        excel_report = excel_report + "<p>" +list1[j] + "</p><table><tr><td>출발지</td><td>" + list2[j] + "</td></tr><tr><td>목적지</td><td>" + list3[j] + "</td></tr><tr><td>탐지시간</td><td>" + list4[j] + "</td></tr></table>"
     html(excel_report)
 
     print(list1)
@@ -101,13 +100,15 @@ def excel(filename):
 def html(excelfile):
     #html_text = """<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body>""" + excelfile.to_html() + """</body></html>"""
     html_text = """<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body>""" + excelfile + """</body></html>"""
-    html_file = open("/Users/aibikeiyeongeumboheom/Desktop/report.html",'w')
+    #html_file = open("/Users/aibikeiyeongeumboheom/Desktop/report.html",'w')
+    html_file = open("/Users/jun/Desktop/report.html", 'w')
     html_file.write(html_text)
     html_file.close()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     #print_hi('PyCharm')
-    a = datetime.today() - timedelta(2)
-    filename = "/Users/aibikeiyeongeumboheom/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
+    a = datetime.today() - timedelta(3)
+    #filename = "/Users/aibikeiyeongeumboheom/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
+    filename = "/Users/jun/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
     excel(filename)
