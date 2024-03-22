@@ -11,6 +11,8 @@ from docx import Document
 import pandas as pd
 from datetime import datetime, timedelta
 import re
+import tkinter as tk
+from tkinter import filedialog
 
 """
 def print_hi(name):
@@ -84,31 +86,55 @@ def excel(filename):
     list3 = text_dst.split("\n")    #문자열 엔터기준으로 나누기
     list4 = text_date.split("\n")
 
-    excel_report = ""
+    """excel_report = ""
     report_date = df.iat[4,11][:11]
     report_date = report_date.replace("-","/")
     for j in range(0, len(list1)):
         list4[j] = report_date + list4[j]#str(datetime.today().strftime("%Y/%m/%d")) + " " + list4[j]
-        excel_report = excel_report + "<p>" +list1[j] + "</p><table><tr><td>출발지</td><td>" + list2[j] + "</td></tr><tr><td>목적지</td><td>" + list3[j] + "</td></tr><tr><td>탐지시간</td><td>" + list4[j] + "</td></tr></table>"
+        excel_report = excel_report + "<p>" + "◼︎ " + list1[j] + "</p><table><tr><td>출발지</td><td>" + list2[j] + "</td></tr><tr><td>목적지</td><td>" + list3[j] + "</td></tr><tr><td>탐지시간</td><td>" + list4[j] + "</td></tr></table>"
     html(excel_report)
 
     print(list1)
     print(list2)
     print(list3)
-    print(list4)
+    print(list4)"""
+    call_html(list1,list2,list3,list4)
+
+def call_html(list1,list2,list3,list4):
+    html("""<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body><table>""")
+    for j in range(0, len(list1)):
+        # print(list1[j])
+        # print(list2[j])
+        # print(list3[j])
+        html("◼︎" + list1[j])
+        html("<table border='1' width='700>")
+        html("<tr height='30'><th rowspan='1'width='100'>출발지</th><td>" + list2[j] + "</td></tr>")
+        html("<tr height='30'><th rowspan='1'>목적지</th><td>" + list3[j] + "</td></tr>")
+        html("<tr height='30'><th rowspan='1'>탐지시간</th><td>"+list4[j]+"</td></tr>")
+        html("<tr height='30'><th><td></td></th></tr>")
+        html("<tr height='30'><th><td></td></th></tr></table><p></p>")
+    html("""</body></html>""")
+
 
 def html(excelfile):
     #html_text = """<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body>""" + excelfile.to_html() + """</body></html>"""
-    html_text = """<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body>""" + excelfile + """</body></html>"""
-    #html_file = open("/Users/aibikeiyeongeumboheom/Desktop/report.html",'w')
-    html_file = open("/Users/jun/Desktop/report.html", 'w')
+    html_text = ""
+    html_text = html_text + excelfile
+
+    #html_file = open("/Users/jun/Desktop/report.html",'w')
+    html_file = open("/Users/jun/Desktop/report.html", 'a+')
     html_file.write(html_text)
     html_file.close()
+
+def tktk():
+    files = filedialog.askopenfilename(initialdir="./",title="hi")
+    return files
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     #print_hi('PyCharm')
-    a = datetime.today() - timedelta(3)
+    a = datetime.today() - timedelta(4)
     #filename = "/Users/aibikeiyeongeumboheom/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
-    filename = "/Users/jun/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
+    #filename = "/Users/jun/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
+    filename = tktk()
     excel(filename)
