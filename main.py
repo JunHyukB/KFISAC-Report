@@ -108,13 +108,13 @@ def call_html(list1,list2,list3,list4):
         # print(list3[j])
         html("◼︎" + list1[j])
         html("<table border='1' width='700>")
-        html("<tr height='30'><th rowspan='1'width='100'>출발지</th><td>" + list2[j] + "</td></tr>")
+        html("<tr height='30'><th rowspan='1'width='100' height='25'>출발지</th><td>" + list2[j] + "</td></tr>")
         html("<tr height='30'><th rowspan='1'>목적지</th><td>" + list3[j] + "</td></tr>")
         html("<tr height='30'><th rowspan='1'>탐지시간</th><td>"+list4[j]+"</td></tr>")
-        html("<tr height='30'><th><td></td></th></tr>")
-        html("<tr height='30'><th><td></td></th></tr></table><p></p>")
+        html("<tr height='30'><th rowspan='1'>탐지결과</th><td>test</td></tr>")
+        html("<tr height='30'><th rowspan='1'>분석내용</th><td>test</td></tr>")
+        html("<tr height='30'><th rowspan='1'>조치결과</th><td>test</td></tr></table><p></p>")
     html("""</body></html>""")
-
 
 def html(excelfile):
     #html_text = """<!DOCTYPE html><html><head><title>report</title><meta charset="UTF-8"></head><body>""" + excelfile.to_html() + """</body></html>"""
@@ -126,9 +126,45 @@ def html(excelfile):
     html_file.write(html_text)
     html_file.close()
 
-def tktk():
-    files = filedialog.askopenfilename(initialdir="./",title="hi")
-    return files
+"""
+def tk_file():
+    #files = filedialog.askopenfilename(initialdir="./",title="hi")
+    #return files
+    try:
+        files = filedialog.askopenfilename(initialdir="./",title="hi")
+        tk.messagebox.showinfo("kFisac Report", "파일 선택 성공!")
+        #text.insert(1.0, files)
+        return files
+    except:
+        tk.messagebox.showinfo("kFisac Report", "파일 에러 실패!")
+"""
+
+def tk_excel():
+    try:
+        files = filedialog.askopenfilename(initialdir="./", title="hi")
+        excel(files)
+        tk.messagebox.showinfo("kFisac Report", "성공!")
+    except:
+        tk.messagebox.showinfo("kFisac Report", "보고서 실패!")
+def tk_console():
+    vWindow = tk.Tk()
+    vWindow.title("kFisac Report")
+    vWindow.geometry("640x480+950+500")
+    vWindow.resizable(False, False)
+
+    label=tk.Label(vWindow, text="일일보고 생성기")
+    label.pack()
+
+    #button1 = tk.Button(vWindow, width=30, height=10, text="파일 선택", command=text.insert(1.0, tk_file))
+    #button1.pack()
+    #text = tk.Text(vWindow, width=42, height=1)
+    #text.pack()
+
+    button2 = tk.Button(vWindow, width=30, height=10, text="보고서 실행", command=tk_excel)
+    button2.place(x=180,y=150)
+    #button2.pack(side="Center")
+
+    vWindow.mainloop()
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
@@ -136,5 +172,7 @@ if __name__ == '__main__':
     a = datetime.today() - timedelta(4)
     #filename = "/Users/aibikeiyeongeumboheom/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
     #filename = "/Users/jun/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
-    filename = tktk()
-    excel(filename)
+
+    tk_console()
+    #filename = tk_file()
+    #excel(filename)
