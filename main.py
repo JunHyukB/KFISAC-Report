@@ -173,6 +173,6 @@ if __name__ == '__main__':
     #filename = "/Users/aibikeiyeongeumboheom/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
     #filename = "/Users/jun/Desktop/탐지분석_"+a.strftime("%Y-%m-%d")+".xlsx"
 
-    tk_console()
+    tk_console() #실행
     #filename = tk_file()
     #excel(filename)
