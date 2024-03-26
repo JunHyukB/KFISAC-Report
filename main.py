@@ -13,6 +13,7 @@ from datetime import datetime, timedelta
 import re
 import tkinter as tk
 from tkinter import filedialog
+from tkinter import messagebox
 
 """
 def print_hi(name):
@@ -31,6 +32,7 @@ def excel(filename):
     text_src = ""
     text_dst = ""
     text_date = ""
+    now_date=""
     p = re.compile("[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+") #ip 정규표현식 적용
     r = re.compile("[0-9]+\-[0-9]+\-[0-9].+") #날짜 정규표현식
 
@@ -50,8 +52,9 @@ def excel(filename):
                 """if text_src != (df['공격대상'][i] + "(" + df.iat[i,5] + "), "): #중복제거 로직 아직 미완
                     text_src = text_src + df['공격대상'][i] + "(" + df.iat[i,5] + "), " """
                 dup_src = text_src.split('(')
-                if dup_src[len(dup_src)-2].endswith(df['공격대상'][i]) and not text_src.endswith("\n"):      #중복제거 로직 미완성
+                if dup_src[len(dup_src)-2].endswith(df['공격대상'][i]) and not text_src.endswith("\n"):      #중복제거 로직 미완성, 출발지가 연속적이지 않으면 검사안됨
                     print('중복_src')
+                    #print(dup_src)
                 else:
                     text_src = text_src + df['공격대상'][i] + "(" + df.iat[i, 5] + "), "
             else:
@@ -71,6 +74,13 @@ def excel(filename):
                 text_dst = text_dst + "\n"
         #탐지시간 로직
         if r.match(df.iat[i,11]):
+            """if text_date == "" or text_date.endswith("\n"):
+                text_date = text_date + df.iat[i,11][:11]
+                text_date = text_date.replace("-","/")
+                print(text_date)""" #날짜 입력 로직이지만 정렬위해 폐기
+            if text_date == "":
+                now_date = now_date + df.iat[i,11][:11]
+                now_date = now_date.replace("-", "/") #최초 1회 오늘 일자 저장
             text_date = text_date + df.iat[i,11][11:-2] + " | "
         else:
             if df.iat[i,11] == "" and text_date != "":
@@ -85,6 +95,12 @@ def excel(filename):
     list2 = text_src.split("\n")
     list3 = text_dst.split("\n")    #문자열 엔터기준으로 나누기
     list4 = text_date.split("\n")
+
+    """정렬로직 추가해야함"""
+
+
+    for g in range(len(list4)):#일자 추가
+        list4[g] = now_date + list4[g]
 
     """excel_report = ""
     report_date = df.iat[4,11][:11]
